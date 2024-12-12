@@ -39,6 +39,8 @@ $stmt = $pdo->prepare('
 ');
 $stmt->execute([$recipe_id]);
 $comments = $stmt->fetchAll();
+// Incluir el encabezado común
+include 'includes/header.php'; 
 ?>
 
 <!DOCTYPE html>
@@ -47,39 +49,51 @@ $comments = $stmt->fetchAll();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo htmlspecialchars($recipe['title']); ?> - Detalles</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <h1><?php echo htmlspecialchars($recipe['title']); ?></h1>
-    <p><strong>Categoría:</strong> <?php echo htmlspecialchars($recipe['category']); ?></p>
-    <p><?php echo htmlspecialchars($recipe['description']); ?></p>
-    <p><strong>Ingredientes:</strong></p>
-    <p><?php echo nl2br(htmlspecialchars($recipe['ingredients'])); ?></p>
-    <p><strong>Instrucciones:</strong></p>
-    <p><?php echo nl2br(htmlspecialchars($recipe['instructions'])); ?></p>
-    <?php if ($recipe['image']): ?>
-        <img src="uploads/<?php echo htmlspecialchars($recipe['image']); ?>" alt="Imagen de la receta">
-    <?php endif; ?>
+    <div class="container mt-5">
+        <h1 class="mb-4"><?php echo htmlspecialchars($recipe['title']); ?></h1>
+        <p><strong>Categoría:</strong> <?php echo htmlspecialchars($recipe['category']); ?></p>
+        <p><?php echo htmlspecialchars($recipe['description']); ?></p>
+        <p><strong>Ingredientes:</strong></p>
+        <p><?php echo nl2br(htmlspecialchars($recipe['ingredients'])); ?></p>
+        <p><strong>Instrucciones:</strong></p>
+        <p><?php echo nl2br(htmlspecialchars($recipe['instructions'])); ?></p>
+        <?php if ($recipe['image']): ?>
+            <img src="uploads/<?php echo htmlspecialchars($recipe['image']); ?>" alt="Imagen de la receta" class="img-fluid">
+        <?php endif; ?>
 
-    <h2>Comentarios</h2>
-    <div class="comments">
-        <?php foreach ($comments as $comment): ?>
-            <div class="comment">
-                <p><strong><?php echo htmlspecialchars($comment['username']); ?>:</strong> <?php echo htmlspecialchars($comment['content']); ?></p>
-                <small>Publicado el <?php echo $comment['created_at']; ?></small>
-            </div>
-        <?php endforeach; ?>
+        <h2 class="mt-5">Comentarios</h2>
+        <div class="comments mb-4">
+            <?php foreach ($comments as $comment): ?>
+                <div class="comment mb-3 p-3 border rounded">
+                    <p><strong><?php echo htmlspecialchars($comment['username']); ?>:</strong> <?php echo htmlspecialchars($comment['content']); ?></p>
+                    <small>Publicado el <?php echo $comment['created_at']; ?></small>
+                </div>
+            <?php endforeach; ?>
+        </div>
+
+        <?php if (isset($_SESSION['user_id'])): ?>
+            <form method="post" action="">
+                <div class="form-group">
+                    <textarea name="content" class="form-control" placeholder="Escribe un comentario..." required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Comentar</button>
+            </form>
+        <?php else: ?>
+            <p><a href="login.php" class="btn btn-link">Inicia sesión</a> para comentar.</p>
+        <?php endif; ?>
+
+        <a href="home.php" class="btn btn-secondary mt-4">Volver a Inicio</a>
     </div>
-
-    <?php if (isset($_SESSION['user_id'])): ?>
-        <form method="post" action="">
-            <textarea name="content" placeholder="Escribe un comentario..." required></textarea>
-            <button type="submit">Comentar</button>
-        </form>
-    <?php else: ?>
-        <p><a href="login.php">Inicia sesión</a> para comentar.</p>
-    <?php endif; ?>
-
-    <a href="home.php">Volver a Inicio</a>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
+<?php 
+// Incluir el pie de página
+include 'includes/footer.php'; 
+?>

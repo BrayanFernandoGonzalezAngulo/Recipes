@@ -31,6 +31,8 @@ if (isset($_GET['delete'])) {
 // Obtener categorías
 $stmt = $pdo->query('SELECT * FROM categories ORDER BY created_at DESC');
 $categories = $stmt->fetchAll();
+// Incluir el encabezado común
+include 'includes/header.php'; 
 ?>
 
 <!DOCTYPE html>
@@ -39,22 +41,34 @@ $categories = $stmt->fetchAll();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Administrar Categorías</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
-    <h1>Administrar Categorías</h1>
-    <form method="post" action="">
-        <input type="text" name="name" placeholder="Nueva categoría" required>
-        <button type="submit">Agregar</button>
-    </form>
-    <ul>
-        <?php foreach ($categories as $category): ?>
-            <li>
-                <?php echo htmlspecialchars($category['name']); ?>
-                <a href="?delete=<?php echo $category['id']; ?>" onclick="return confirm('¿Eliminar esta categoría?')">Eliminar</a>
-            </li>
-        <?php endforeach; ?>
-    </ul>
-    <a href="dashboard.php">Volver al Panel</a>
+    <div class="container mt-5">
+        <h1 class="mb-4">Administrar Categorías</h1>
+        <form method="post" action="" class="form-inline mb-4">
+            <div class="form-group mr-2">
+                <input type="text" name="name" class="form-control" placeholder="Nueva categoría" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Agregar</button>
+        </form>
+        <ul class="list-group">
+            <?php foreach ($categories as $category): ?>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <?php echo htmlspecialchars($category['name']); ?>
+                    <a href="?delete=<?php echo $category['id']; ?>" class="btn btn-danger btn-sm" onclick="return confirm('¿Eliminar esta categoría?')">Eliminar</a>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+        <a href="dashboard.php" class="btn btn-secondary mt-4">Volver al Panel</a>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
+<?php 
+// Incluir el pie de página
+include 'includes/footer.php'; 
+?>
